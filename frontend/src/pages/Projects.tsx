@@ -19,6 +19,7 @@ const myProjects = [
     description: 'A computer vision system that controls video playback and system volume natively using real-time head pose tracking and hand gestures.',
     techStack: ['Python', 'OpenCV', 'MediaPipe'],
     videoUrl: vid1,
+    githubUrl: 'https://github.com/TANNU-GITHUB/Minor_Project_1',
   },
   {
     id: 'p2',
@@ -28,6 +29,7 @@ const myProjects = [
     description: 'A frontend Single Page Application featuring a "Studio Mode" powered by ReF-LDM and a "Fast Mode" using CodeFormer for high-fidelity facial restoration.',
     techStack: ['React', 'Vite', 'Tailwind', 'Vercel'],
     videoUrl: vid2,
+    githubUrl: 'https://github.com/TANNU-GITHUB/Minor_Project_2',
   },
   {
     id: 'p3',
@@ -37,6 +39,7 @@ const myProjects = [
     description: 'A robust video action recognition pipeline utilizing a Bag-of-Visual-Words (BoVW) approach, trained and evaluated on the UCF101 dataset.',
     techStack: ['Python', 'OpenCV', 'Scikit-Learn'],
     videoUrl: vid3,
+    githubUrl: 'https://github.com/TANNU-GITHUB/Minor_Project_3',
   }
 ];
 
@@ -261,12 +264,16 @@ export default function Projects({ theme }: PageProps) {
 
                   {/* Action Buttons */}
                   <div className="flex items-center gap-4 mt-auto">
-                    <button
-                      type="button"
-                      className={`p-3 rounded-full transition-colors border ${d ? 'bg-white/60 border-slate-300/50 text-slate-800 hover:bg-white/90' : 'bg-white/10 hover:bg-white/20 border-white/10 text-white'}`}
-                    >
-                      <Github size={20} strokeWidth={1.5} />
-                    </button>
+                    {currentProject.githubUrl && (
+                      <a
+                        href={currentProject.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`p-3 rounded-full transition-colors border inline-flex items-center justify-center ${d ? 'bg-white/60 border-slate-300/50 text-slate-800 hover:bg-white/90' : 'bg-white/10 hover:bg-white/20 border-white/10 text-white'}`}
+                      >
+                        <Github size={20} strokeWidth={1.5} />
+                      </a>
+                    )}
                     <button
                       type="button"
                       className={`flex items-center gap-2 px-6 py-3 rounded-full transition-colors text-sm font-medium tracking-wide ${d ? 'bg-teal-600/90 text-white hover:bg-teal-600' : 'bg-white text-black hover:bg-white/90'}`}
