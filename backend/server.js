@@ -53,8 +53,10 @@ const ResumeSchema = new mongoose.Schema({
 const Resume = mongoose.model('Resume', ResumeSchema);
 
 // --- RESTful API Routes ---
+app.get('/', (req, res) => {
+  res.send('Portfolio Backend is Alive and Running!');
+});
 
-// 1. POST: Save a new contact message
 app.post('/api/contact', async (req, res) => {
   try {
     const { name, email, message } = req.body;
