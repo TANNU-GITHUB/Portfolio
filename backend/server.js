@@ -2,9 +2,12 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import multer from 'multer';
+
 
 dotenv.config();
 const app = express();
+const upload = multer();
 
 // Middleware
 app.use(cors());
@@ -63,31 +66,57 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// 2. GET: Download the Resume
+app.post('/api/resume/upload', upload.single('file'), async (req, res) => {
+  try {
+    const { format } = req.body; // 'pdf' or 'docx'
+    const contentType = format === 'pdf'
+      ? 'application/pdf'
+      : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+
+    await Resume.findOneAndUpdate(
+      { format },
+      { format, fileData: req.file.buffer, contentType },
+      { upsert: true, new: true }
+    );
+    res.json({ success: true, message: `${format} resume uploaded successfully!` });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 app.get('/api/resume/:format', async (req, res) => {
   try {
     const { format } = req.params;
+
+    if (!['pdf', 'docx'].includes(format)) {
+      return res.status(400).json({ error: 'Invalid format' });
+    }
+
     const resume = await Resume.findOne({ format });
 
     if (!resume) {
-      return res.status(404).json({ error: 'Resume not found in database' });
+      return res.status(404).json({ error: `Resume (${format}) not found in database` });
     }
 
     const viewMode = req.query.mode === 'view';
-    // inline: open in browser tab when supported (PDF). DOCX may still download depending on browser.
+
     res.set({
       'Content-Type': resume.contentType,
       'Content-Disposition': viewMode
         ? `inline; filename="My_Resume.${format}"`
         : `attachment; filename="My_Resume.${format}"`,
+      'Content-Length': resume.fileData.length,
     });
-    
-    // Send the raw buffer data
-    res.send(resume.fileData);
+
+    res.end(Buffer.from(resume.fileData), 'binary');
+
   } catch (error) {
+    console.error('Resume fetch error:', error);
     res.status(500).json({ error: 'Server Error' });
   }
 });
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
