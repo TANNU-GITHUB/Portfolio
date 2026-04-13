@@ -9,7 +9,7 @@ export default function Contact({ theme }: PageProps) {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
   // Backend URL (Update this when deploying)
-  const API_URL = 'http://localhost:5000/api';
+  const API_URL = 'https://portfolio-backend-r3qi.onrender.com/api';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
